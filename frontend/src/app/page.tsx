@@ -107,7 +107,8 @@ export default function Home() {
         tx.recentBlockhash = blockhash;
         
         const signed = await solana.signTransaction(tx);
-        const signature = await connection.sendRawTransaction(signed.serialize());
+        // Skip preflight simulation to prevent Phantom's local RPC race condition duplicate error
+        const signature = await connection.sendRawTransaction(signed.serialize(), { skipPreflight: true });
         
         setStatus("Proof published anonymously to the Blockchain!");
         setTxLink(`https://explorer.solana.com/tx/${signature}?cluster=testnet`);
