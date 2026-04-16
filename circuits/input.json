@@ -1,3 +1,6 @@
 {
-    "heart_rate": 72
+  "heart_rate": 70,
+  "systolic": 110,
+  "diastolic": 75,
+  "stress": 30
 }

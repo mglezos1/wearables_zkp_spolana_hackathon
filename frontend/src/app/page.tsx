@@ -8,12 +8,10 @@ import Link from "next/link";
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<string>("");
-  const [tier, setTier] = useState<string | null>(null);
   const [txLink, setTxLink] = useState<string>("");
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if previously connected
     const solana = (window as any).solana;
     if (solana?.isPhantom) {
       solana.connect({ onlyIfTrusted: true }).then((resp: any) => {
@@ -54,29 +52,24 @@ export default function Home() {
         return;
       }
       
-      if (data.heart_rate === undefined) {
-        setStatus("Error: Invalid JSON format. Expected 'heart_rate' number.");
+      if (data.heart_rate === undefined || data.systolic === undefined) {
+        setStatus("Error: Invalid JSON format. Expected heart_rate, systolic, diastolic, stress metrics. Use the Data Generator!");
         return;
       }
 
       setStatus("Generating ZK Proof locally...");
-      const { proof, publicSignals } = await generateProof(data.heart_rate);
+      const { proof, publicSignals } = await generateProof(data.heart_rate, data.systolic, data.diastolic, data.stress);
       
       const category = publicSignals[0];
-      let tierStr = "Increased Premium ($$$)";
-      if (category == "0") tierStr = "Discounted Premium! ($)";
-      else if (category == "1") tierStr = "Standard Premium ($$)";
-      
-      setTier(tierStr);
 
       const solana = (window as any).solana;
       if (!solana || !solana.isPhantom) {
-        setStatus("ZK Proof generated locally! To test publishing, please install Phantom Wallet.");
+        setStatus("ZK Proof generated locally! To publish, please install Phantom.");
         return;
       }
 
       if (!walletAddress) {
-        setStatus("ZK Proof generated! Please connect your wallet using the top right button to publish it.");
+        setStatus("ZK Proof generated! Connect your wallet using the top right button to publish it.");
         return;
       }
 
@@ -115,22 +108,25 @@ export default function Home() {
 
       } catch (err) {
          console.error(err);
-         setStatus("Wallet interaction cancelled or an error occurred. The ZK logic was calculated natively anyway!");
+         setStatus("Wallet interaction cancelled or an error occurred.");
       }
 
     } catch (e) {
       console.error(e);
-      setStatus("Failed to generate proof. Ensure .wasm and .zkey are properly updated.");
+      setStatus("Failed to generate proof. Have you run 'bash recompile.sh' yet?");
     }
   };
 
   return (
     <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 relative">
       
-      {/* Insurer Portal link Top Left */}
-      <div className="absolute top-6 left-8">
-        <Link href="/insurer" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-purple-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2">
-           👨‍💼 Insurer Portal
+      {/* Navigation App Map Top Left */}
+      <div className="absolute top-6 left-8 flex flex-col gap-3 z-50">
+        <Link href="/insurer" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-purple-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
+           👨‍💼 View Insurer Portal
+        </Link>
+        <Link href="/generator" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-blue-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
+           🧬 Data Generator
         </Link>
       </div>
 
@@ -151,13 +147,15 @@ export default function Home() {
         )}
       </div>
 
-      <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 space-y-6 mt-10">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-          ZK Health Insurance
-        </h1>
-        <p className="text-slate-400 text-sm">
-          Upload your single heart rate measurement. A Zero-Knowledge proof is generated directly on your device, ensuring no raw medical data is uploaded.
-        </p>
+      <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 space-y-6 mt-10 z-10">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            ZK Health Insurance
+          </h1>
+          <p className="text-slate-400 text-sm mt-2">
+            Upload your multi-metric <code className="text-emerald-300 bg-emerald-900/50 px-1 rounded">.json</code> profile. A Zero-Knowledge proof calculates your holistic premium directly on your device.
+          </p>
+        </div>
 
         <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center hover:border-emerald-400 transition-colors">
           <input 
@@ -171,7 +169,7 @@ export default function Home() {
         <button 
           onClick={handleUpload}
           disabled={!file || !walletAddress}
-          className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all font-mono"
+          className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-mono"
         >
           GENERATE PROOF & UPLOAD
         </button>
@@ -184,8 +182,6 @@ export default function Home() {
             <p className="text-sm font-medium text-emerald-300 break-words">{status}</p>
           </div>
         )}
-
-
 
         {txLink && (
            <a 

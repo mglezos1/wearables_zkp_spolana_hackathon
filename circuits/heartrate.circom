@@ -1,37 +1,50 @@
-pragma circom 2.1.2;
-
+pragma circom 2.0.0;
 include "node_modules/circomlib/circuits/comparators.circom";
 
-// Circuit to take 1 heart rate and output category.
-// < 75 => category 0
-// >= 75 and <= 85 => category 1
-// > 85 => category 2
-
-template HeartRateTier() {
+// HealthTier computes a final category 0, 1, or 2 from four measurables!
+template HealthTier() {
     signal input heart_rate;
+    signal input systolic;
+    signal input diastolic;
+    signal input stress;
+    
     signal output category;
 
-    component lessThan75 = LessThan(12);
-    lessThan75.in[0] <== heart_rate;
-    lessThan75.in[1] <== 75;
+    // Penalty variables
+    component hr_cmp = GreaterEqThan(8);
+    hr_cmp.in[0] <== heart_rate;
+    hr_cmp.in[1] <== 85; 
+    signal hr_penalty <== hr_cmp.out;
 
-    component lessThan85 = LessEqThan(12);
-    lessThan85.in[0] <== heart_rate;
-    lessThan85.in[1] <== 85;
+    component sys_cmp = GreaterEqThan(9); // BP can go up to 180, so 9 bits is safe (512)
+    sys_cmp.in[0] <== systolic;
+    sys_cmp.in[1] <== 125;
+    signal sys_penalty <== sys_cmp.out;
 
-    signal notLessThan75;
-    notLessThan75 <== 1 - lessThan75.out;
-    
-    signal notLessThan85;
-    notLessThan85 <== 1 - lessThan85.out;
+    component dia_cmp = GreaterEqThan(8);
+    dia_cmp.in[0] <== diastolic;
+    dia_cmp.in[1] <== 85;
+    signal dia_penalty <== dia_cmp.out;
 
-    signal isCategory1;
-    isCategory1 <== notLessThan75 * lessThan85.out;
+    component str_cmp = GreaterEqThan(8);
+    str_cmp.in[0] <== stress;
+    str_cmp.in[1] <== 50;
+    signal str_penalty <== str_cmp.out;
     
-    signal isCategory2;
-    isCategory2 <== notLessThan85;
+    signal total_penalty <== hr_penalty + sys_penalty + dia_penalty + str_penalty;
     
-    category <== isCategory1 + 2 * isCategory2;
+    // Evaluate Categories
+    component is_healthy = IsZero();
+    is_healthy.in <== total_penalty;
+    
+    component is_unhealthy = GreaterEqThan(8);
+    is_unhealthy.in[0] <== total_penalty;
+    is_unhealthy.in[1] <== 3;
+
+    signal p1 <== 1 - is_healthy.out; 
+    signal p2 <== 1 * is_unhealthy.out;
+    
+    category <== p1 + p2;
 }
 
-component main = HeartRateTier();
+component main = HealthTier();

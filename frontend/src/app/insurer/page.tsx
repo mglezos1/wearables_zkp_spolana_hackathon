@@ -46,11 +46,11 @@ export default function Insurer() {
         const tier = data.t;
 
         if (tier === "0") {
-          setResult("DECREASE RATES (Discount applied)");
+          setResult("HEALTHY: DISCOUNT APPLIED!");
         } else if (tier === "1") {
-          setResult("STAY THE SAME (Standard Tier)");
+          setResult("NORMAL: PRICE STAYS SAME");
         } else if (tier === "2") {
-          setResult("INCREASE RATES (High risk profile)");
+          setResult("UNHEALTHY: PRICE INCREASE");
         } else {
           setStatus("Error: Unrecognized ZK Insure payload format.");
         }
@@ -65,10 +65,13 @@ export default function Insurer() {
 
   return (
     <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 relative">
-      {/* Navigation Link back */}
-      <div className="absolute top-6 left-8">
-        <Link href="/" className="text-slate-400 hover:text-purple-400 font-bold transition-colors">
-          ← Back to User Portal
+      {/* Navigation App Map */}
+      <div className="absolute top-6 left-8 flex flex-col gap-3 z-50">
+        <Link href="/" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
+          ← View ZK Dashboard
+        </Link>
+        <Link href="/generator" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-blue-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
+           🧬 Data Generator
         </Link>
       </div>
 
