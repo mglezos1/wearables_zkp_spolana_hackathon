@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Connection } from "@solana/web3.js";
 import Link from "next/link";
 
-export default function Insurer() {
+export default function CompanyPortal() {
   const [signature, setSignature] = useState("");
   const [status, setStatus] = useState("");
   const [result, setResult] = useState<string | null>(null);
@@ -43,16 +43,25 @@ export default function Insurer() {
       try {
         const decoded = atob(memoData);
         const data = JSON.parse(decoded);
-        const tier = data.t;
 
-        if (tier === "0") {
-          setResult("HEALTHY: DISCOUNT APPLIED!");
-        } else if (tier === "1") {
-          setResult("NORMAL: PRICE STAYS SAME");
-        } else if (tier === "2") {
-          setResult("UNHEALTHY: PRICE INCREASE");
+        if (data.agentAnalysis) {
+          const { hasAnxiety, anxietyScore } = data.agentAnalysis;
+          if (hasAnxiety) {
+            setResult(`ANXIOUS (Score: ${anxietyScore}): SEEK SUPPORT`);
+          } else {
+            setResult(`RELAXED (Score: ${anxietyScore}): ALL CLEAR`);
+          }
         } else {
-          setStatus("Error: Unrecognized ZK Insure payload format.");
+          const tier = data.t;
+          if (tier === "0") {
+            setResult("HEALTHY: DISCOUNT APPLIED!");
+          } else if (tier === "1") {
+            setResult("NORMAL: PRICE STAYS SAME");
+          } else if (tier === "2") {
+            setResult("UNHEALTHY: PRICE INCREASE");
+          } else {
+            setStatus("Error: Unrecognized ZK Insure payload format.");
+          }
         }
       } catch (parseErr) {
         setStatus("Error: Could not decouple the mathematical ZK packet. It may be incorrectly formatted.");
@@ -77,10 +86,10 @@ export default function Insurer() {
 
       <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 space-y-6">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-          Insurer Portal
+          Company Wellness Portal
         </h1>
         <p className="text-slate-400 text-sm">
-          Paste the verified Solana transaction signature below to determine the client's rate adjustments. Raw medical data is 100% hidden by ZK Math.
+          Paste the verified Solana transaction signature below to determine the employee's anxiety status. Raw medical data is 100% hidden by ZK Math.
         </p>
 
         <div className="space-y-4 text-center">
