@@ -45,8 +45,9 @@ export default function CompanyPortal() {
         const data = JSON.parse(decoded);
 
         if (data.agentAnalysis) {
-          const { hasAnxiety, anxietyScore } = data.agentAnalysis;
-          if (hasAnxiety) {
+          const { anxietyScore } = data.agentAnalysis;
+          // Calculate anxiety status freshly based on the score in case older blockchain payloads have a buggy 'hasAnxiety' flag
+          if (anxietyScore > 60) {
             setResult(`ANXIOUS (Score: ${anxietyScore}): SEEK SUPPORT`);
           } else {
             setResult(`RELAXED (Score: ${anxietyScore}): ALL CLEAR`);
