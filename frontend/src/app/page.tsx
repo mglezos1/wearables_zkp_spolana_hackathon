@@ -288,11 +288,20 @@ export default function Home() {
       </div>
 
       <div className="max-w-2xl w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-10 space-y-10 z-10 min-h-[400px] flex flex-col justify-center">
-        <div className="text-center space-y-2 mb-4">
-          <div className="bg-white inline-block p-3 rounded-2xl shadow-lg mb-2">
-            <img src="/vitram-logo.png" alt="VITRAM Logo" className="h-8 mx-auto" />
+        <div className="flex flex-col items-center text-center space-y-4 mb-6">
+          {/* Prominent SVG Logo */}
+          <div className="flex items-center font-sans font-black tracking-widest text-5xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+            <span>VITR</span>
+            <div className="relative flex items-center justify-center w-14 h-14 -mx-1">
+              <svg viewBox="0 0 40 40" className="w-full h-full text-white">
+                <path d="M 8 36 L 20 6 L 32 36" stroke="currentColor" strokeWidth="5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                <path d="M 12 25 Q 26 23 37 9 L 27 9 M 37 9 L 37 19" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span>M</span>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase tracking-wider">
             ZK Employee Wellness
           </h1>
           <p className="text-slate-400 text-sm">

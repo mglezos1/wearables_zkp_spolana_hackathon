@@ -86,11 +86,20 @@ export default function CompanyPortal() {
       </div>
 
       <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 space-y-6">
-        <div className="text-center">
-          <div className="bg-white inline-block p-4 rounded-2xl shadow-lg mb-4">
-            <img src="/vitram-logo.png" alt="VITRAM Logo" className="h-8 mx-auto" />
+        <div className="flex flex-col items-center text-center space-y-4 mb-2">
+          {/* Prominent SVG Logo */}
+          <div className="flex items-center font-sans font-black tracking-widest text-4xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">
+            <span>VITR</span>
+            <div className="relative flex items-center justify-center w-12 h-12 -mx-1">
+              <svg viewBox="0 0 40 40" className="w-full h-full text-white">
+                <path d="M 8 36 L 20 6 L 32 36" stroke="currentColor" strokeWidth="5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                <path d="M 12 25 Q 26 23 37 9 L 27 9 M 37 9 L 37 19" stroke="#c084fc" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span>M</span>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+
+          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider">
             Company Wellness Portal
           </h1>
         </div>
