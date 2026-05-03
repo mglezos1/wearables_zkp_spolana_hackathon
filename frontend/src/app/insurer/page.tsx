@@ -86,9 +86,14 @@ export default function CompanyPortal() {
       </div>
 
       <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 space-y-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-          Company Wellness Portal
-        </h1>
+        <div className="text-center">
+          <div className="bg-white inline-block p-4 rounded-2xl shadow-lg mb-4">
+            <img src="/vitram-logo.png" alt="VITRAM Logo" className="h-8 mx-auto" />
+          </div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+            Company Wellness Portal
+          </h1>
+        </div>
         <p className="text-slate-400 text-sm">
           Paste the verified Solana transaction signature below to determine the employee's anxiety status. Raw medical data is 100% hidden by ZK Math.
         </p>

@@ -289,6 +289,9 @@ export default function Home() {
 
       <div className="max-w-2xl w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-10 space-y-10 z-10 min-h-[400px] flex flex-col justify-center">
         <div className="text-center space-y-2 mb-4">
+          <div className="bg-white inline-block p-3 rounded-2xl shadow-lg mb-2">
+            <img src="/vitram-logo.png" alt="VITRAM Logo" className="h-8 mx-auto" />
+          </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             ZK Employee Wellness
           </h1>
