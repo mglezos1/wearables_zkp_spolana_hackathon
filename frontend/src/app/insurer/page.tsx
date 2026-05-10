@@ -106,7 +106,7 @@ export default function CompanyPortal() {
           </div>
 
           <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider">
-            Company Wellness Portal
+            Wellness Portal
           </h1>
         </div>
         <p className="text-slate-400 text-sm">

@@ -284,7 +284,7 @@ export default function Home() {
            🏠 Main Website
         </a>
         <Link href="/insurer" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-purple-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
-           🏢 View Company Portal
+           🏢 View Wellness Portal
         </Link>
       </div>
 
@@ -320,7 +320,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase tracking-wider">
-            ZK Employee Wellness
+            Smart Health Monitoring System
           </h1>
           <p className="text-slate-400 text-sm">
             Generate synthetic wearable metrics mimicking Apple Health telemetry. A Zero-Knowledge proof calculates your anxiety status directly on your device before publishing to Solana.
