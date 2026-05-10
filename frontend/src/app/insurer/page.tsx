@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Connection } from "@solana/web3.js";
 import Link from "next/link";
+import bs58 from "bs58";
 
 export default function CompanyPortal() {
   const [signature, setSignature] = useState("");
@@ -24,17 +25,22 @@ export default function CompanyPortal() {
         return;
       }
 
-      // Look for the memo instruction
+      // Look for the custom smart contract instruction
       let memoData = null;
+      const CUSTOM_PROGRAM_ID = "EadtZD4nK7oxpbwS59BxDJF1Bmv9DJjV6CZKWVHMRVYr";
+
       for (const ix of tx.transaction.message.instructions) {
-         if ("program" in ix && ix.program === "spl-memo") {
-            memoData = (ix as any).parsed;
+         if ("programId" in ix && ix.programId.toString() === CUSTOM_PROGRAM_ID && "data" in ix) {
+            // ix.data comes from PartiallyDecodedInstruction encoded in base58
+            const rawBytes = bs58.decode((ix as any).data);
+            const stringBytes = rawBytes.slice(12); // Strip 8-byte discriminator and 4-byte length prefix
+            memoData = new TextDecoder().decode(stringBytes);
             break;
          }
       }
 
       if (!memoData) {
-        setStatus("Error: Transaction does not contain a secure ZK Memo! Are you sure this is a ZK Heartrate transaction?");
+        setStatus("Error: Transaction does not hit the VITRAM Smart Contract or data format is corrupted!");
         return;
       }
 

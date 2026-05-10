@@ -204,7 +204,7 @@ export default function Home() {
         const publicKey = resp.publicKey;
 
         const connection = new Connection("https://api.testnet.solana.com", "confirmed");
-        const memoProgramId = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+        const customProgramId = new PublicKey("EadtZD4nK7oxpbwS59BxDJF1Bmv9DJjV6CZKWVHMRVYr");
         
         setStatus("AI Agent analyzing biometric history...");
         setIsAgentRunning(true);
@@ -227,11 +227,26 @@ export default function Home() {
         };
         const memoText = btoa(JSON.stringify(payload));
         
+        // Dynamically calculate Anchor discriminator for `submit_telemetry` 
+        const encoder = new TextEncoder();
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode("global:submit_telemetry"));
+        const discriminator = new Uint8Array(hashBuffer).slice(0, 8);
+        
+        // Serialize String argument: [4 byte little-endian length] + [UTF-8 string bytes]
+        const payloadBytes = encoder.encode(memoText);
+        const lengthBuffer = new ArrayBuffer(4);
+        new DataView(lengthBuffer).setUint32(0, payloadBytes.length, true);
+        
+        const ixData = new Uint8Array(8 + 4 + payloadBytes.length);
+        ixData.set(discriminator, 0);
+        ixData.set(new Uint8Array(lengthBuffer), 8);
+        ixData.set(payloadBytes, 12);
+        
         const tx = new Transaction().add(
           new TransactionInstruction({
-            keys: [{ pubkey: publicKey, isSigner: true, isWritable: true }],
-            data: Buffer.from(new TextEncoder().encode(memoText)),
-            programId: memoProgramId,
+            keys: [], // Empty accounts matching the Anchor validation scope
+            data: Buffer.from(ixData),
+            programId: customProgramId,
           })
         );
         
