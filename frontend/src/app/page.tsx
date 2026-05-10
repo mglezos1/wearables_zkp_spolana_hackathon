@@ -280,6 +280,9 @@ export default function Home() {
 
       {/* Navigation App Map Top Left */}
       <div className="absolute top-6 left-8 flex flex-col gap-3 z-50">
+        <a href="https://v0-vitram-landing-page.vercel.app/" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
+           🏠 Main Website
+        </a>
         <Link href="/insurer" className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-purple-400 font-bold py-2 px-6 rounded-full shadow-lg transition-colors border-2 border-slate-600 flex items-center gap-2 text-sm w-max">
            🏢 View Company Portal
         </Link>
