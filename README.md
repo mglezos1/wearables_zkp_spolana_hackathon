@@ -1,61 +1,25 @@
-# Welcome to the ZK Heart Rate Insurance Application Workspace
+# 🧬 VITRAM: Zero-Knowledge Employee Wellness
 
-Because there were terminal runner limitations on WSL with `-c`, I have staged all your source files. You can now use your own terminal to safely orchestrate everything!
+VITRAM is a privacy-first web3 biometric wellness platform built on Solana. It allows users to securely verify their health and anxiety metrics to their employers or health insurance providers **without ever revealing their raw medical data**.
 
-## 1. Compile the Circom Circuit
+By utilizing on-device Deterministic AI and Zero-Knowledge (ZK) Cryptography, your highly sensitive heart rate and blood pressure data never leaves your device. Only a cryptographic proof of your health status is generated and securely broadcasted to the blockchain.
 
-In your WSL terminal:
-```bash
-cd /mnt/c/Users/mglez/.gemini/antigravity/scratch/zk-heartrate-insurance/circuits
-npm install
+## 🚀 How It Works (Website User Guide)
 
-# Compile the circuit
-npx circom heartrate.circom --wasm --r1cs -o build
+When you access the VITRAM application, the flow is separated into two simple perspectives: the **Employee** (Data Generator) and the **Company/Insurer** (Data Verifier).
 
-# Run the setups to generate the keys
-npx snarkjs powersoftau new bn128 12 pot12_0000.ptau -v
-npx snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="First contribution" -v -e="random text"
-npx snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v
-npx snarkjs groth16 setup build/heartrate.r1cs pot12_final.ptau heartrate_0000.zkey
-npx snarkjs zkey contribute heartrate_0000.zkey heartrate_final.zkey --name="1st Contribution Name" -v -e="more random text"
-npx snarkjs zkey export verificationkey heartrate_final.zkey verification_key.json
-```
+### 1. Generating Your Health Proof (For Employees)
+1. **Connect Your Wallet:** Click the "Connect Phantom" button in the top right of the ZK Employee Wellness dashboard.
+2. **Sync Biometrics:** Click "Connect Smart Watch" to securely pull your local mock Apple Health telemetry (Heart Rate, Blood Pressure, and Stress Levels).
+3. **Local AI Analysis:** VITRAM's on-device AI will evaluate your metrics locally to generate an Anxiety Score. Behind the scenes, your raw numbers are permanently siloed—they never hit a server.
+4. **Generate & Upload Proof:** Once analyzed, click the "Generate Proof & Upload" button. A mathematical Zero-Knowledge proof is computed locally securely hiding your data, and the encrypted payload is uploaded to the custom VITRAM Smart Contract on the Solana Testnet.
+5. **Save Your Signature:** You will be provided a unique Solana Transaction Signature URL. Copy this signature—it is your unhackable, anonymous ticket!
 
-## 2. Deploy the Solana Program
+### 2. Verifying the Proof (For Employers / Verifiers)
+1. **Access the Portal:** Navigate to the **🏢 View Company Portal** via the navigation menu.
+2. **Input Signature:** Paste the Solana Transaction Signature provided by the employee into the secure box.
+3. **Automated Verification:** Click "Verify". The portal will query the blockchain, instantly decouple the mathematical ZK-proof, and automatically issue an "ALL CLEAR" or "SEEK SUPPORT" status based entirely on cryptographic math—with zero exposure to the user's actual underlying heart rate data!
 
-```bash
-cd /mnt/c/Users/mglez/.gemini/antigravity/scratch/zk-heartrate-insurance
-anchor init insurance_project
-```
-Then, copy the `contract-src/lib.rs` file I wrote into `insurance_project/programs/insurance_project/src/lib.rs`.
-```bash
-cd insurance_project
-anchor build
-anchor deploy
-```
+---
 
-## 3. Create the Frontend (Next.js Application)
-
-```bash
-cd /mnt/c/Users/mglez/.gemini/antigravity/scratch/zk-heartrate-insurance
-npx create-next-app@latest frontend
-```
-(Select **Yes** for TypeScript, Tailwind CSS, and App Router).
-
-Now move my frontend files into your newly created frontend structure:
-1. Replace `frontend/src/app/page.tsx` with `frontend-src/page.tsx`
-2. Move `frontend-src/zk.ts` to `frontend/src/app/zk.ts`
-3. Copy the compiled wasm and zkey to the public folder:
-    - `cp circuits/build/heartrate_js/heartrate.wasm frontend/public/`
-    - `cp circuits/heartrate_final.zkey frontend/public/`
-4. Install exactly what we need for the browser proofs:
-```bash
-cd frontend
-npm install snarkjs @solana/web3.js
-```
-Then start the server!
-```bash
-npm run dev
-```
-
-You can use the JSON provided at `circuits/input.json` on the website to generate the proof!
+*Securing the future of decentralized health with Zero-Knowledge Cryptography & Edge AI.*
